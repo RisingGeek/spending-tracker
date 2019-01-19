@@ -14,16 +14,17 @@
 <body>
     <%- include partials/navbar.ejs %>
     <div class="container">
+      <br>
+      <h2 class="text-center">Your Expenses</h2>
       <form action="/profile/transactions" method="post">
           <button type="submit" class="btn mt-5 mb-5">add expense</button>
       </form>
-      <table class="table">
+      <table class="table text-center">
         <thead>
           <tr>
-            <th scope="col">Date</th>
             <th scope="col">Category</th>
             <th scope="col">Cost</th>
-            <th scope="col">delete</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -34,12 +35,20 @@
           <% } %>
           <% transactions.forEach(transaction => { %>
             <tr>
-              <td><%= transaction.date.toDateString() %></td>
-              <td><%- categories[transaction.category] %> <%= transaction.category %></td>
+              <td>
+                <a href="/profile/transactions/edit/<%= transaction.id %>">
+                  <%- categories[transaction.category] %> <%= transaction.category %>
+                  <p><%= transaction.date.toDateString() %></p>
+                </a>
+              </td>
               <td><%= transaction.amount %></td>
-              <form method="post" action="/profile/transactions/delete?id=<%= transaction.id %>">
-                <td><button type="submit" class="btn trash" style="background: none"><i class="fas fa-trash" style="color:#d61313"></i></button></td>
-              </form>
+                <td>
+                  <form method="post" action="/profile/transactions/delete?id=<%= transaction.id %>">
+                    <button type="submit" class="btn trash" style="background: none">
+                      <i class="fas fa-trash" style="color:#d61313"></i>
+                    </button>
+                  </form>
+                </td>
             </tr>
           <% }) %>
         </tbody>

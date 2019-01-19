@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <% if(!user) { %>
               <li class="nav-item">
@@ -22,12 +22,15 @@
                 <a class="nav-link" href="/profile/transactions">Expense</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/auth/logout">Expense Categories</a>
+                <a class="nav-link" href="/profile/categories">Expense Categories</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="/auth/logout">Logout</a>
               </li>
             <% } %>
           </ul>
+          <% if(user) { %>
+            <a target="_blank" href=<%= user.photo %>><img alt="profile picture" class="img-fluid rounded-circle" src=<%= user.photo %>></a>
+          <% } %>
         </div>
       </nav>

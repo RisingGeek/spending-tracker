@@ -46,4 +46,22 @@ router.post('/transactions/delete',authCheck,(req,res) => {
     })
 })
 
+router.get('/transactions/edit/:id',authCheck,(req,res) => {
+    transactionCrud.showTransactionInfo(req.user.googleId,req.params.id)
+    .then((transactionInfo) => {
+        res.render('editTransaction',{user:req.user, categories:categories, transactionInfo:transactionInfo});
+    })
+})
+
+router.post('/editTransaction',authCheck,(req,res) => {
+    transactionCrud.editTransaction(req.user.googleId,req.body,req.query.id)
+    .then(() => {
+        res.redirect('/profile/transactions');
+    })
+})
+
+router.get('/categories',authCheck,(req,res) => {
+    res.render('categories',{user:req.user,categories:categories});
+})
+
 module.exports=router;
