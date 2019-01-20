@@ -16,7 +16,6 @@ const transactionCrud = {
         return new Promise((resolve,reject) => {
             User.findOne({googleId:googleId})
             .then(user => {
-                user.transactions=user.transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth())
                 resolve(user.transactions);
             })
         })
@@ -56,6 +55,14 @@ const transactionCrud = {
             .then((res) => {
                 console.log(res);
                 resolve();
+            })
+        })
+    },
+    getTransactionApi: (googleId) => {
+        return new Promise((resolve,reject) => {
+            User.findOne({googleId:googleId})
+            .then(user => {
+                resolve(user.transactions);
             })
         })
     }

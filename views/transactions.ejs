@@ -41,7 +41,7 @@
                   <p><%= transaction.date.toDateString() %></p>
                 </a>
               </td>
-              <td><%= transaction.amount %></td>
+              <td>&#8377; <%= transaction.amount %></td>
                 <td>
                   <form method="post" action="/profile/transactions/delete?id=<%= transaction.id %>">
                     <button type="submit" class="btn trash" style="background: none">
@@ -54,5 +54,7 @@
         </tbody>
       </table>
     </div>
+    <script>
+    </script>
 </body>
 </html>

@@ -9,6 +9,7 @@ const cookieSession=require('cookie-session');
 const passport=require('passport');
 const path=require('path');
 const bodyParser=require('body-parser');
+const transactionCrud=require('./db/transactionCrud')
 
 const PORT=process.env.PORT||3001;
 
@@ -32,5 +33,12 @@ app.use('/profile',profileRoutes);
 app.get('/',(req,res)=> {
     res.render('home',{user:req.user});
 })
-
+const authCheck = (req,res,next)=> {
+    if(!req.user) {
+        res.redirect('/');
+    }
+    else {
+        next();
+    }
+}
 app.listen(PORT,()=>console.log(`server started on port ${PORT}`));

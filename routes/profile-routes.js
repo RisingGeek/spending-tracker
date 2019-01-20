@@ -19,6 +19,7 @@ const authCheck = (req,res,next)=> {
 router.get('/transactions',authCheck,(req,res)=> {
     transactionCrud.getTransaction(req.user.googleId)
     .then(transactions => {
+        transactions=transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
         res.render('transactions',{user:req.user,transactions:transactions,categories:categories});  
     })
 })
@@ -32,7 +33,6 @@ router.get('/transactions/add',authCheck,(req,res) => {
 })
 
 router.post('/addTransaction',authCheck,(req,res) => {
-    console.log(req.body)
     transactionCrud.addTransaction(req.body,req.user.googleId)
     .then(() => {
         res.redirect('/profile/transactions');
@@ -62,6 +62,29 @@ router.post('/editTransaction',authCheck,(req,res) => {
 
 router.get('/categories',authCheck,(req,res) => {
     res.render('categories',{user:req.user,categories:categories});
+})
+
+router.get('/spending',authCheck,(req,res) => {
+    transactionCrud.getTransaction(req.user.googleId)
+    .then(transactions => {
+        transactions=transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
+        let sumObject={};
+        Object.keys(categories).map(category => {
+            let smallTransactionArray=transactions.filter(transaction => transaction.category===category);
+            sumObject[category]=smallTransactionArray.reduce((total,transaction) => total+transaction.amount,0);
+        })
+        let totalAmount=0;
+        Object.keys(sumObject).map(category => {
+            totalAmount+=sumObject[category];
+        })
+        res.render('spending',{
+            user:req.user,
+            transactions:transactions,
+            categories:categories,
+            sumObject:sumObject,
+            totalAmount:totalAmount
+        });  
+    })
 })
 
 module.exports=router;
