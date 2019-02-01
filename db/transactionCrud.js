@@ -16,7 +16,7 @@ const transactionCrud = {
         return new Promise((resolve,reject) => {
             User.findOne({googleId:googleId})
             .then(user => {
-                resolve(user.transactions);
+                resolve({transactions:user.transactions, carryOver: user.carryOver});
             })
         })
     },
@@ -84,6 +84,22 @@ const transactionCrud = {
             .then(user => {
                 resolve({allIncome:user.income, carryOver: user.carryOver});
             })
+        })
+    },
+    saveProfile: (googleId,carryOver) => {
+        return new Promise((resolve,reject) => {
+            if(carryOver) {
+                User.updateOne(
+                    {googleId:googleId},
+                    {$set: {"carryOver": true}}
+                ).then(() => resolve())
+            }
+            else {
+                User.updateOne(
+                    {googleId:googleId},
+                    {$set: {"carryOver": false}}
+                ).then(() => resolve())
+            }
         })
     }
 }

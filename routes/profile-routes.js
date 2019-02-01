@@ -18,14 +18,16 @@ const authCheck = (req,res,next)=> {
 
 router.get('/transactions',authCheck,(req,res)=> {
     transactionCrud.getTransaction(req.user.googleId)
-    .then(transactions => {
-        transactions=transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
+    .then(transactionObject => {
+        if(!transactionObject.carryOver) {
+            transactionObject.transactions=transactionObject.transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
+        }
         transactionCrud.getIncome(req.user.googleId)
         .then(object => {
             if(!object.carryOver) {
                 object.allIncome=object.allIncome.filter(income => income.date.getMonth()===new Date().getMonth() && income.date.getYear()===new Date().getYear())
             }
-            res.render('transactions',{user:req.user,transactions:transactions,categories:categories,allIncome:object.allIncome});  
+            res.render('transactions',{user:req.user,transactions:transactionObject.transactions,categories:categories,allIncome:object.allIncome});  
         })
     })
 })
@@ -72,11 +74,13 @@ router.get('/categories',authCheck,(req,res) => {
 
 router.get('/spending',authCheck,(req,res) => {
     transactionCrud.getTransaction(req.user.googleId)
-    .then(transactions => {
-        transactions=transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
+    .then(transactionObject => {
+        if(!transactionObject.carryOver) {
+            transactionObject.transactions=transactionObject.transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
+        }
         let sumObject={};
         Object.keys(categories).map(category => {
-            let smallTransactionArray=transactions.filter(transaction => transaction.category===category);
+            let smallTransactionArray=transactionObject.transactions.filter(transaction => transaction.category===category);
             sumObject[category]=smallTransactionArray.reduce((total,transaction) => total+transaction.amount,0);
         })
         let totalAmount=0;
@@ -91,7 +95,7 @@ router.get('/spending',authCheck,(req,res) => {
             let totalIncome=object.allIncome.reduce((total, income)=> total+income.salary,0);
             res.render('spending',{
                 user:req.user,
-                transactions:transactions,
+                transactions:transactionObject.transactions,
                 categories:categories,
                 sumObject:sumObject,
                 totalAmount:totalAmount,
@@ -113,6 +117,17 @@ router.post('/addIncome', authCheck, (req,res) => {
     transactionCrud.addIncome(req.body,req.user.googleId)
     .then(() => {
         res.redirect('/profile/transactions');
+    })
+})
+
+router.get('/settings', authCheck, (req,res) => {
+    res.render('settings',{user:req.user});
+})
+
+router.post('/save', authCheck, (req,res) => {
+    transactionCrud.saveProfile(req.user.googleId,req.body.carryOver)
+    .then(() => {
+        res.redirect('/profile/settings');
     })
 })
 
