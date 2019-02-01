@@ -5,7 +5,7 @@ module.exports={
     },
     mongodb: {
         //dbURI:'mongodb://bhavay:hpnotebook2@ds145434.mlab.com:45434/oauth'
-        dbURI:'mongodb://localhost/users'
+        dbURI: 'mongodb://bhavay:hpnotebook2@ds145434.mlab.com:45434/oauth' || 'mongodb://localhost/users'
     },
     session: {
         cookieKey:'bhavaypuricookiekey'
