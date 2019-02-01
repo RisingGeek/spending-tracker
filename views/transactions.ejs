@@ -19,87 +19,91 @@
         <div class="col-sm-4"></div>
         <div class="col-sm-2">
           <form action="/profile/transactions" method="post">
-            <button type="submit" class="btn mt-5 mb-5">add expense</button>
+            <button type="submit" class="btn btn-outline-primary mt-5 mb-5">add expense</button>
           </form>
         </div>
         <div class="col-sm-2">
           <form action="/profile/allIncome" method="post">
-            <button type="submit" class="btn mt-5 mb-5">add income</button>
+            <button type="submit" class="btn btn-outline-primary mt-5 mb-5">add income</button>
           </form>
         </div>
         <div class="col-sm-4"></div>
       </div>
-      <h2 class="text-center">Your Expenses</h2>
-      <table class="table text-center">
-        <thead>
-          <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Cost</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if(!transactions.length) { %>
-            <tr>
-              <td colspan="3">No transactions yet.</td>
-            </tr>
-          <% } %>
-          <% transactions.forEach(transaction => { %>
-            <tr>
-              <td>
-                <a href="/profile/transactions/edit/<%= transaction.id %>">
-                  <%- categories[transaction.category] %> <%= transaction.category %>
-                  <p><%= transaction.date.toDateString() %></p>
-                </a>
-              </td>
-              <td>&#8377; <%= transaction.amount %></td>
-                <td>
-                  <form method="post" action="/profile/transactions/delete?id=<%= transaction.id %>">
-                    <button type="submit" class="btn trash" style="background: none">
-                      <i class="fas fa-trash" style="color:#d61313"></i>
-                    </button>
-                  </form>
-                </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
 
-      <h2 class="text-center">Income</h2>
-      <table class="table text-center">
-        <thead>
-          <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Salary</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if(!allIncome.length) { %>
-            <tr>
-              <td colspan="3">No transactions yet.</td>
-            </tr>
-          <% } %>
-          <% allIncome.forEach(income => { %>
-            <tr>
-              <td>
-                <a href="/profile/allIncome/edit/<%= income.id %>">
-                  <p><%= income.date.toDateString() %></p>
-                </a>
-              </td>
-              <td>&#8377; <%= income.salary %></td>
-                <td>
-                  <form method="post" action="/profile/allIncome/delete?id=<%= income.id %>">
-                    <button type="submit" class="btn trash" style="background: none">
-                      <i class="fas fa-trash" style="color:#d61313"></i>
-                    </button>
-                  </form>
-                </td>
-            </tr>
-          <% }) %>
-        </tbody>
+      <div class="row">
+        <div class="col-sm-6">
+            <h2 class="text-center">Your Expenses</h2>
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Cost</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(!transactions.length) { %>
+                  <tr>
+                    <td colspan="3">No transactions yet.</td>
+                  </tr>
+                <% } %>
+                <% transactions.forEach(transaction => { %>
+                  <tr>
+                    <td>
+                      <a href="/profile/transactions/edit/<%= transaction.id %>">
+                        <%- categories[transaction.category] %> <%= transaction.category %>
+                        <p><%= transaction.date.toDateString() %></p>
+                      </a>
+                    </td>
+                    <td>&#8377; <%= transaction.amount %></td>
+                      <td>
+                        <form method="post" action="/profile/transactions/delete?id=<%= transaction.id %>">
+                          <button type="submit" class="btn trash" style="background: none">
+                            <i class="fas fa-trash" style="color:#d61313"></i>
+                          </button>
+                        </form>
+                      </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center">Income</h2>
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Salary</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(!allIncome.length) { %>
+                  <tr>
+                    <td colspan="3">No transactions yet.</td>
+                  </tr>
+                <% } %>
+                <% allIncome.forEach(income => { %>
+                  <tr>
+                    <td>
+                      <a href="/profile/allIncome/edit/<%= income.id %>">
+                        <p><%= income.date.toDateString() %></p>
+                      </a>
+                    </td>
+                    <td>&#8377; <%= income.salary %></td>
+                      <td>
+                        <form method="post" action="/profile/allIncome/delete?id=<%= income.id %>">
+                          <button type="submit" class="btn trash" style="background: none">
+                            <i class="fas fa-trash" style="color:#d61313"></i>
+                          </button>
+                        </form>
+                      </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+        </div>
+      </div>
     </div>
-    <script>
-    </script>
 </body>
 </html>
