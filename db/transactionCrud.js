@@ -65,6 +65,26 @@ const transactionCrud = {
                 resolve(user.transactions);
             })
         })
+    },
+    addIncome: (income,googleId) => {
+        return new Promise((resolve,reject) => {
+            User.findOne({googleId:googleId})
+            .then(user => {
+                user.income.unshift({date:new Date(),salary:income.salary});
+                new User(user).save().then(newIncome => {
+                    console.log('income saved');
+                    resolve();
+                })
+            })
+        })
+    },
+    getIncome: (googleId) => {
+        return new Promise((resolve,reject) => {
+            User.findOne({googleId:googleId})
+            .then(user => {
+                resolve({allIncome:user.income, carryOver: user.carryOver});
+            })
+        })
     }
 }
 

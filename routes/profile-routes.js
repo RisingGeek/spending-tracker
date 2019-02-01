@@ -20,7 +20,13 @@ router.get('/transactions',authCheck,(req,res)=> {
     transactionCrud.getTransaction(req.user.googleId)
     .then(transactions => {
         transactions=transactions.filter(transaction => transaction.date.getMonth()===new Date().getMonth() && transaction.date.getYear()===new Date().getYear())
-        res.render('transactions',{user:req.user,transactions:transactions,categories:categories});  
+        transactionCrud.getIncome(req.user.googleId)
+        .then(object => {
+            if(!object.carryOver) {
+                object.allIncome=object.allIncome.filter(income => income.date.getMonth()===new Date().getMonth() && income.date.getYear()===new Date().getYear())
+            }
+            res.render('transactions',{user:req.user,transactions:transactions,categories:categories,allIncome:object.allIncome});  
+        })
     })
 })
 
@@ -77,13 +83,36 @@ router.get('/spending',authCheck,(req,res) => {
         Object.keys(sumObject).map(category => {
             totalAmount+=sumObject[category];
         })
-        res.render('spending',{
-            user:req.user,
-            transactions:transactions,
-            categories:categories,
-            sumObject:sumObject,
-            totalAmount:totalAmount
-        });  
+        transactionCrud.getIncome(req.user.googleId)
+        .then(object => {
+            if(!object.carryOver) {
+                object.allIncome=object.allIncome.filter(income => income.date.getMonth()===new Date().getMonth() && income.date.getYear()===new Date().getYear())
+            }
+            let totalIncome=object.allIncome.reduce((total, income)=> total+income.salary,0);
+            res.render('spending',{
+                user:req.user,
+                transactions:transactions,
+                categories:categories,
+                sumObject:sumObject,
+                totalAmount:totalAmount,
+                totalIncome:totalIncome
+            });  
+        })
+    })
+})
+
+router.post('/allIncome', authCheck, (req,res) => {
+    res.redirect('/profile/allIncome/add');
+})
+
+router.get('/allIncome/add',authCheck,(req,res) => {
+    res.render('addIncome',{user:req.user});
+})
+
+router.post('/addIncome', authCheck, (req,res) => {
+    transactionCrud.addIncome(req.body,req.user.googleId)
+    .then(() => {
+        res.redirect('/profile/transactions');
     })
 })
 

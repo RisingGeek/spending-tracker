@@ -12,7 +12,14 @@ const userSchema=new Schema({
             amount:Number,
             date:Date
         }
-    ]
+    ],
+    income: [
+        {
+            date: Date,
+            salary: Number
+        }
+    ],
+    carryOver: {type: Boolean, default: false}
 })
 
 const User=mongoose.model('user',userSchema);

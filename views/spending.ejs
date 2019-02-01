@@ -16,6 +16,16 @@
     <br />
     <div class="container">
         <% if(totalAmount) { %>
+            <h3 class="text-center">Total Income: <%= totalIncome %></h3>
+        <% } %>
+        <% if(!totalAmount && ! totalIncome) { %>
+            <h3 class="text-center">You have no transactions yet.</h3>
+            <h4 class="text-center">Add your first transaction <a href="/profile/transactions">here</a></h4>
+        <% } %>
+        <% if(totalAmount) { %>
+            <% if(totalAmount) { %>
+                <h3 class="text-center">Total Expenses: <%= totalAmount %></h3>
+            <% } %>
             <div class="row text-center">
                 <div class="col-sm-6"><h3>Category</h3></div>
                 <div class="col-sm-6"><h3>Total Amount</h3></div>
@@ -34,11 +44,7 @@
             <% } %>
         <% }) %>
         <% if(totalAmount) { %>
-            <h3 class="text-center">Total Expenses: <%= totalAmount %></h3>
-        <% } %>
-        <% if(!totalAmount) { %>
-            <h3 class="text-center">You have no transactions yet.</h3>
-            <h4 class="text-center">Add your first transaction <a href="/profile/transactions">here</a></h4>
+            <h3 class="text-center">Balance: <%= totalIncome-totalAmount %></h3>
         <% } %>
     </div>
 </body>
