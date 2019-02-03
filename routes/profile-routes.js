@@ -5,7 +5,7 @@ const categories = require('../db/categories');
 
 const authCheck = (req,res,next)=> {
     if(!req.user) {
-        res.redirect('/');
+        res.redirect('/auth/google');
     }
     else {
         next();
