@@ -1,0 +1,17 @@
+footer {
+    background: rgba(0,0,0,0.9);
+    color: white;
+}
+footer a {
+    color: white;
+    font-size: 20px;
+}
+footer a:hover {
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+} 
+footer p {
+    font-size: 23px;
+    color: lightgray;
+}

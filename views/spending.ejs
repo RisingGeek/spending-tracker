@@ -7,6 +7,7 @@
     <title>Spending</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/footer.css">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -14,7 +15,7 @@
 <body>
     <%- include partials/navbar.ejs %>
     <br />
-    <div class="container">
+    <div class="container pt-5 mt-5 mb-5">
         <% if(totalIncome) { %>
             <h3 class="text-center">Total Income: <%= totalIncome %></h3>
         <% } %>
@@ -23,13 +24,7 @@
             <h4 class="text-center">Add your first transaction <a href="/profile/transactions">here</a></h4>
         <% } %>
         <% if(totalAmount) { %>
-            <% if(totalAmount) { %>
-                <h3 class="text-center">Total Expenses: <%= totalAmount %></h3>
-            <% } %>
-            <div class="row text-center">
-                <div class="col-sm-6"><h3>Category</h3></div>
-                <div class="col-sm-6"><h3>Total Amount</h3></div>
-            </div>
+            <h3 class="text-center">Total Expenses: <%= totalAmount %></h3>
         <% } %>
         <% Object.keys(sumObject).map(category => { %>
             <% if(sumObject[category]) { %>
@@ -47,5 +42,6 @@
             <h3 class="text-center">Balance: <%= totalIncome-totalAmount %></h3>
         <% } %>
     </div>
+    <%- include partials/footer.ejs %>
 </body>
 </html>
