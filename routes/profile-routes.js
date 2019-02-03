@@ -42,7 +42,7 @@ router.get('/transactions/add',authCheck,(req,res) => {
 
 router.post('/addTransaction',authCheck,(req,res) => {
     transactionCrud.addTransaction(req.body,req.user.googleId)
-    .then(() => {
+    .then((response) => {
         res.redirect('/profile/transactions');
     })
 })
@@ -120,6 +120,27 @@ router.post('/addIncome', authCheck, (req,res) => {
     })
 })
 
+router.post('/allIncome/delete', authCheck, (req,res) => {
+    transactionCrud.deleteIncome(req.user.googleId,req.query.id)
+    .then(() => {
+        res.redirect('/profile/transactions');
+    })
+})
+
+router.get('/allIncome/edit/:id', authCheck, (req,res) => {
+    transactionCrud.showIncomeInfo(req.user.googleId,req.params.id)
+    .then((incomeInfo) => {
+        res.render('editIncome',{user:req.user, incomeInfo:incomeInfo});
+    })
+})
+
+router.post('/editIncome', authCheck, (req,res) => {
+    transactionCrud.editIncome(req.user.googleId,req.body,req.query.id)
+    .then(() => {
+        res.redirect('/profile/transactions');
+    })
+})
+
 router.get('/settings', authCheck, (req,res) => {
     res.render('settings',{user:req.user});
 })
@@ -130,5 +151,37 @@ router.post('/save', authCheck, (req,res) => {
         res.redirect('/profile/settings');
     })
 })
+
+router.get('/graph',authCheck, (req,res) => {
+    res.render('graph', {user:req.user});
+})
+router.get('/expenseCategoryCount', (req,res) => {
+    let labels=[];
+    let costs=[];
+    function loop() {
+    const promises=Object.keys(categories).map(async (category,i) => {
+        await new Promise((resolve,reject) => {
+        transactionCrud.getIndividualInfo('116149357991206037514', category)
+        .then((response) => {
+            resolve();
+            labels.push(category);
+            costs.push(response);
+            // if(i===Object.keys(categories).length-1) {
+            //     res.send({labels: labels, costs: costs});
+            // }
+        })
+    })
+    })
+    return Promise.all(promises);
+}
+loop().then(()=>res.send({labels:labels,costs:costs}));
+})
+
+// router.get('/totalIncome', (req,res) => {
+//     transactionCrud.getTotalIncome('116149357991206037514')
+//     .then((response) => {
+//         res.send({totalIncome:response});
+//     })
+// })
 
 module.exports=router;

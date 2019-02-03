@@ -7,7 +7,7 @@ const transactionCrud = {
                 user.transactions.unshift({category:transaction.category,amount:transaction.amount,date:new Date()});
                 new User(user).save().then(newTransaction => {
                     console.log('transaction saved');
-                    resolve();
+                    resolve({valid:true,msg:''});
                 })
             })
         })
@@ -78,11 +78,50 @@ const transactionCrud = {
             })
         })
     },
+    deleteIncome: (googleId,incomeId) => {
+        return new Promise((resolve,reject) => {
+            User.updateOne(
+                {googleId:googleId},
+                {$pull: {'income': {_id: incomeId}}}
+            )
+            .then((user) => {
+                console.log('deleted',user)
+                resolve()
+            });
+        })
+    },
     getIncome: (googleId) => {
         return new Promise((resolve,reject) => {
             User.findOne({googleId:googleId})
             .then(user => {
                 resolve({allIncome:user.income, carryOver: user.carryOver});
+            })
+        })
+    },
+    showIncomeInfo: (googleId, incomeId) => {
+        return new Promise((resolve,reject) => {
+            User.findOne(
+                {googleId:googleId},
+                {income: {$elemMatch: {_id:incomeId}}}
+            )
+            .then(income => {
+                resolve(income.income[0]);
+            })
+        })
+    },
+    editIncome: (googleId, income, incomeId) => {
+        return new Promise((resolve,reject) => {
+            console.log(income)
+            console.log(incomeId)
+            User.updateOne(
+                {googleId:googleId,'income._id':incomeId},
+                {$set: {
+                    'income.$.salary': income.salary
+                }}
+            )
+            .then((res) => {
+                console.log(res);
+                resolve();
             })
         })
     },
@@ -101,7 +140,41 @@ const transactionCrud = {
                 ).then(() => resolve())
             }
         })
-    }
+    },
+    getIndividualInfo: (googleId,category) => {
+        return new Promise((resolve,reject) => {
+            User.aggregate([
+                {$match: {'transactions.category': category}},
+                {$project: {
+                    transactions: {$filter: {
+                        input:'$transactions',
+                        as:'transaction',
+                        cond:{$eq:['$$transaction.category',category]}
+                    }}
+                }}
+            ]
+            )
+            .then(transactions => {
+                if(!transactions.length) {
+                    resolve(0);
+                    return;
+                }
+                let totalAmount=transactions[0].transactions.reduce((total,transaction) => total+transaction.amount,0);
+                resolve(totalAmount);
+            })
+        })
+    },
+    // getTotalIncome: (googleId) => {
+    //     return new Promise((resolve,reject) => {
+    //         User.findOne({googleId:googleId})
+    //         .then((user) => {
+    //             if(!user.carryOver) {
+    //                 user.income=user.income.filter(income => income.date.getMonth()===new Date().getMonth() && income.date.getYear()===new Date().getYear())
+    //             }
+    //             resolve(user.income.reduce((total, income)=> total+income.salary,0));
+    //         })
+    //     })
+    // }
 }
 
 module.exports=transactionCrud;
