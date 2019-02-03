@@ -155,13 +155,13 @@ router.post('/save', authCheck, (req,res) => {
 router.get('/graph',authCheck, (req,res) => {
     res.render('graph', {user:req.user});
 })
-router.get('/expenseCategoryCount', (req,res) => {
+router.get('/expenseCategoryCount', authCheck, (req,res) => {
     let labels=[];
     let costs=[];
     function loop() {
     const promises=Object.keys(categories).map(async (category,i) => {
         await new Promise((resolve,reject) => {
-        transactionCrud.getIndividualInfo('116149357991206037514', category)
+        transactionCrud.getIndividualInfo(req.user.googleId, category)
         .then((response) => {
             resolve();
             labels.push(category);

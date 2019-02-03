@@ -144,6 +144,7 @@ const transactionCrud = {
     getIndividualInfo: (googleId,category) => {
         return new Promise((resolve,reject) => {
             User.aggregate([
+                {$match:{'googleId': googleId}},
                 {$match: {'transactions.category': category}},
                 {$project: {
                     transactions: {$filter: {
@@ -156,9 +157,11 @@ const transactionCrud = {
             )
             .then(transactions => {
                 if(!transactions.length) {
+                    console.log('transactions 0')
                     resolve(0);
                     return;
                 }
+                console.log(transactions[0].transactions)
                 let totalAmount=transactions[0].transactions.reduce((total,transaction) => total+transaction.amount,0);
                 resolve(totalAmount);
             })

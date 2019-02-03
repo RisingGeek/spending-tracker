@@ -25,6 +25,7 @@
     axios.get('/profile/expenseCategoryCount')
     .then(response => {
         document.querySelector('.loader').style.display='none';
+        if(response.data.costs.filter(cost => cost!==0).length) {
         let backgroundColor=[];
         for(let i=0;i<response.data.labels.length;i++) {
             backgroundColor.push(`rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`);
@@ -55,6 +56,10 @@
             }
         }
     });
+    }
+    else {
+        document.querySelector('.graph').innerHTML='<h1>No Expenses yet<h1>'
+    }
     })
     </script>
 </body>
