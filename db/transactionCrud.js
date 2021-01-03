@@ -6,7 +6,6 @@ const transactionCrud = {
             .then(user => {
                 user.transactions.unshift({category:transaction.category,amount:transaction.amount,date:new Date()});
                 new User(user).save().then(newTransaction => {
-                    console.log('transaction saved');
                     resolve({valid:true,msg:''});
                 })
             })
@@ -27,7 +26,6 @@ const transactionCrud = {
                 {$pull: {'transactions': {_id: transactionId}}}
             )
             .then((user) => {
-                console.log('deleted',user)
                 resolve()
             });
         })
@@ -53,7 +51,6 @@ const transactionCrud = {
                 }}
             )
             .then((res) => {
-                console.log(res);
                 resolve();
             })
         })
@@ -72,7 +69,6 @@ const transactionCrud = {
             .then(user => {
                 user.income.unshift({date:new Date(),salary:income.salary});
                 new User(user).save().then(newIncome => {
-                    console.log('income saved');
                     resolve();
                 })
             })
@@ -85,7 +81,6 @@ const transactionCrud = {
                 {$pull: {'income': {_id: incomeId}}}
             )
             .then((user) => {
-                console.log('deleted',user)
                 resolve()
             });
         })
@@ -111,8 +106,6 @@ const transactionCrud = {
     },
     editIncome: (googleId, income, incomeId) => {
         return new Promise((resolve,reject) => {
-            console.log(income)
-            console.log(incomeId)
             User.updateOne(
                 {googleId:googleId,'income._id':incomeId},
                 {$set: {
@@ -120,7 +113,6 @@ const transactionCrud = {
                 }}
             )
             .then((res) => {
-                console.log(res);
                 resolve();
             })
         })
@@ -157,11 +149,9 @@ const transactionCrud = {
             )
             .then(transactions => {
                 if(!transactions.length) {
-                    console.log('transactions 0')
                     resolve(0);
                     return;
                 }
-                console.log(transactions[0].transactions)
                 let totalAmount=transactions[0].transactions.reduce((total,transaction) => total+transaction.amount,0);
                 resolve(totalAmount);
             })

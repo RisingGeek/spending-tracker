@@ -50,7 +50,7 @@
                         var total = dataset.data.reduce((total,current) => total+current,0)
                         var currentValue = dataset.data[tooltipItem.index];
                         var percentage = Math.round(((currentValue/total) * 100)*100)/100;
-                        return data.labels[tooltipItem.index]+percentage + "%";
+                        return `${data.labels[tooltipItem.index]} ${percentage}%`;
                     }
                 }
             }
